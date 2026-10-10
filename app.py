@@ -4,6 +4,9 @@ import base64
 
 st.set_page_config(page_title="💧 Water Reminder", layout="centered")
 
+# Safety cap so a repeating reminder always ends
+MAX_REPEATS = 10
+
 # Optional circular slider
 try:
     from streamlit_circular_slider import circular_slider_available, circular_slider
@@ -126,11 +129,11 @@ if st.button("Start Reminder"):
         st.warning("⏱️ Set a time greater than 0.")
     else:
         if on_repeat:
-            while True:
-                run_timer(total_seconds, play_sound)
+            for _ in range(MAX_REPEATS):
+                run_timer(total_seconds)
         elif repeat_reminder:
-            while True:
-                run_timer(total_seconds, play_sound)
+            for _ in range(MAX_REPEATS):
+                run_timer(total_seconds)
                 time.sleep(repeat_interval * 60)
         else:
             run_timer(total_seconds, play_sound)
