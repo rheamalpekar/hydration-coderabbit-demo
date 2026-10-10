@@ -94,8 +94,10 @@ if repeat_reminder:
 
 on_repeat = st.checkbox("🔁 On-Repeat (Auto-Restart Timer)")
 
+play_sound = st.checkbox("🔔 Play sound when time is up", value=True)
+
 # Timer Function
-def run_timer(duration):
+def run_timer(duration, play_sound=True):
     st.markdown("### ⏱️ Time Remaining")
     time_placeholder = st.empty()
     progress_bar = st.progress(0)
@@ -112,13 +114,14 @@ def run_timer(duration):
     st.balloons()
     st.success("🔔 Time to drink water!")
 
-    audio_base64 = get_audio_base64("notification.mp3")
-    if audio_base64:
-        st.markdown(f"""
-            <audio autoplay>
-                <source src="data:audio/mpeg;base64,{audio_base64}" type="audio/mpeg">
-            </audio>
-        """, unsafe_allow_html=True)
+    if play_sound:
+        audio_base64 = get_audio_base64("notification.mp3")
+        if audio_base64:
+            st.markdown(f"""
+                <audio autoplay>
+                    <source src="data:audio/mpeg;base64,{audio_base64}" type="audio/mpeg">
+                </audio>
+            """, unsafe_allow_html=True)
 
 # Start Reminder Button
 if st.button("Start Reminder"):
@@ -133,5 +136,5 @@ if st.button("Start Reminder"):
                 run_timer(total_seconds)
                 time.sleep(repeat_interval * 60)
         else:
-            run_timer(total_seconds)
+            run_timer(total_seconds, play_sound)
 
