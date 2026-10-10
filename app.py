@@ -91,6 +91,9 @@ if repeat_reminder:
 
 on_repeat = st.checkbox("🔁 On-Repeat (Auto-Restart Timer)")
 
+# Daily hydration goal
+st.number_input("🎯 Daily goal", 1, 20, 8, key="daily_goal")
+
 # Timer Function
 def run_timer(duration):
     st.markdown("### ⏱️ Time Remaining")
@@ -108,6 +111,12 @@ def run_timer(duration):
 
     st.balloons()
     st.success("🔔 Time to drink water!")
+
+    cups = st.session_state.get("cups_logged", 0) + 1
+    st.session_state["cups_logged"] = cups
+    goal = st.session_state.get("daily_goal", 8)
+    st.progress(min(cups / goal, 1.0))
+    st.caption(f"💧 {cups} of {goal} cups logged this session")
 
     audio_base64 = get_audio_base64("notification.mp3")
     if audio_base64:
